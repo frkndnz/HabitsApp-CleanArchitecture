@@ -25,7 +25,7 @@ public sealed class Result<T>
     {
         return new Result<T>(value, true, null,message);
     }
-    public static Result<T> Failure(string[] errorMessages)
+    public static Result<T> Failure(params string[]? errorMessages)
     {
         return new Result<T>(default, false, errorMessages, null);
     }
