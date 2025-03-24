@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.Domain", "src\Hab
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.Application", "src\HabitsApp.Application\HabitsApp.Application.csproj", "{984FF628-95AA-4AFA-95F9-B6FD4EF2CEC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.Infrastructure", "src\HabitsApp.Infrastructure\HabitsApp.Infrastructure.csproj", "{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{984FF628-95AA-4AFA-95F9-B6FD4EF2CEC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{984FF628-95AA-4AFA-95F9-B6FD4EF2CEC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{984FF628-95AA-4AFA-95F9-B6FD4EF2CEC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,5 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{3BDEF4F9-BEC5-4D54-8D21-7D0E348D560C} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
 		{984FF628-95AA-4AFA-95F9-B6FD4EF2CEC5} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
+		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
 	EndGlobalSection
 EndGlobal
