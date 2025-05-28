@@ -37,7 +37,7 @@ internal sealed class ApplicationDbContext : IdentityDbContext<AppUser, Identity
             switch (entry.State)
             {
                 case EntityState.Added:
-                   entry.Property(p=>p.CreatedAt).CurrentValue = DateTime.UtcNow;
+                    entry.Property(p=>p.CreatedAt).CurrentValue = DateTime.UtcNow;
                     break;
                 case EntityState.Modified:
                     entry.Property(p => p.UpdatedAt).CurrentValue = DateTime.UtcNow;

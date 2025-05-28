@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HabitsApp.Application.Services;
 using HabitsApp.Domain.Abstractions.Repositories;
 using HabitsApp.Domain.Users;
 using HabitsApp.Infrastructure.Context;
+using HabitsApp.Infrastructure.Options;
 using HabitsApp.Infrastructure.Repositories;
+using HabitsApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,8 +42,12 @@ public static class InfrastructureRegistrar
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
-        services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
 
+        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+        services.ConfigureOptions<JwtOptionsSetup>();
+
+        services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IJwtProvider,JwtProvider>();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
     }
 }

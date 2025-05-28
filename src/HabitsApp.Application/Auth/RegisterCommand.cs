@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
 using HabitsApp.Domain.Shared;
 using HabitsApp.Domain.Users;
 using MediatR;
@@ -12,8 +13,16 @@ using Microsoft.EntityFrameworkCore;
 namespace HabitsApp.Application.Auth;
 public sealed record RegisterCommand(string UserName,string Email,string Password):IRequest<Result<string>>;
 
-
-internal sealed class RegisterCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<RegisterCommand, Result<string>>
+public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+{
+    public RegisterCommandValidator()
+    {
+        RuleFor(x => x.UserName).NotEmpty().WithMessage("Kullanıcı adı boş olamaz!");
+        RuleFor(x => x.Email).NotEmpty().WithMessage("Eposta boş olamaz!").EmailAddress().WithMessage("Geçerli bir eposta adresi giriniz!");
+        RuleFor(x => x.Password).NotEmpty().WithMessage("Şifre boş olamaz!");
+    }
+}
+    internal sealed class RegisterCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<RegisterCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {

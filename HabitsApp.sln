@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}"
 EndProject
@@ -10,6 +10,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.Application", "src\HabitsApp.Application\HabitsApp.Application.csproj", "{984FF628-95AA-4AFA-95F9-B6FD4EF2CEC5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.Infrastructure", "src\HabitsApp.Infrastructure\HabitsApp.Infrastructure.csproj", "{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.WebAPI", "src\HabitsApp.WebAPI\HabitsApp.WebAPI.csproj", "{B3CC1D30-0323-429A-8A5B-9CFC39D8A381}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.AppHost", "src\HabitsApp.AppHost\HabitsApp.AppHost.csproj", "{87BBB75B-1710-4204-8236-EEE67BCBFBD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabitsApp.ServiceDefaults", "src\HabitsApp.ServiceDefaults\HabitsApp.ServiceDefaults.csproj", "{3E5E8347-2BDA-49D8-8909-F3BD102E896D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +35,18 @@ Global
 		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3CC1D30-0323-429A-8A5B-9CFC39D8A381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3CC1D30-0323-429A-8A5B-9CFC39D8A381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3CC1D30-0323-429A-8A5B-9CFC39D8A381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3CC1D30-0323-429A-8A5B-9CFC39D8A381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87BBB75B-1710-4204-8236-EEE67BCBFBD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87BBB75B-1710-4204-8236-EEE67BCBFBD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87BBB75B-1710-4204-8236-EEE67BCBFBD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87BBB75B-1710-4204-8236-EEE67BCBFBD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E5E8347-2BDA-49D8-8909-F3BD102E896D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E5E8347-2BDA-49D8-8909-F3BD102E896D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E5E8347-2BDA-49D8-8909-F3BD102E896D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E5E8347-2BDA-49D8-8909-F3BD102E896D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,5 +55,8 @@ Global
 		{3BDEF4F9-BEC5-4D54-8D21-7D0E348D560C} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
 		{984FF628-95AA-4AFA-95F9-B6FD4EF2CEC5} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
 		{7EEEC0BA-EAA3-47CD-A003-A4CC668E2914} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
+		{B3CC1D30-0323-429A-8A5B-9CFC39D8A381} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
+		{87BBB75B-1710-4204-8236-EEE67BCBFBD3} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
+		{3E5E8347-2BDA-49D8-8909-F3BD102E896D} = {E0DBCD35-B7BA-4B50-8E14-2EEE0FABF232}
 	EndGlobalSection
 EndGlobal
