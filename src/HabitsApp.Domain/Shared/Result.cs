@@ -21,7 +21,7 @@ public sealed class Result<T>
         Message = message;
     }
 
-    public static Result<T> Success(T value,string? message)
+    public static Result<T> Success(T? value,string? message)
     {
         return new Result<T>(value, true, null,message);
     }

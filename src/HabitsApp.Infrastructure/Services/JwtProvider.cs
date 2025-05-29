@@ -19,6 +19,7 @@ internal class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
         List<Claim> claims = new()
         {
             new Claim("user_id",user.Id.ToString()),
+            new Claim("user_name",user.UserName!.ToString()),
         };
 
         var expires = DateTime.Now.AddDays(1);

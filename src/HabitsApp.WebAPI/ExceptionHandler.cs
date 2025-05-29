@@ -20,8 +20,8 @@ public  class ExceptionHandler : IExceptionHandler
             httpContext.Response.StatusCode = 400;
             ValidationException validationException = (ValidationException)exception;
             var dict = validationException.Errors.ToDictionary(e => e.PropertyName, e => e.ErrorMessage).ToArray();
-            var list = validationException.Errors.Select(e => e.ErrorMessage).ToList();
-            errorResult = Result<string>.Failure();   
+            var list = validationException.Errors.Select(e => $"{e.PropertyName} : {e.ErrorMessage}").ToArray();
+            errorResult = Result<string>.Failure(list);   
             
 
             await httpContext.Response.WriteAsJsonAsync(errorResult);

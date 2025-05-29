@@ -45,7 +45,7 @@ app.UseCors(opt =>
 
 
 app.RegisterRoutes();
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => "Hello World!").RequireAuthorization();
 app.MapControllers().RequireAuthorization();
 
 app.UseAuthentication();

@@ -23,5 +23,12 @@ public static class AuthModule
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         })
         .Produces<Result<LoginCommandResponse>>();
+
+        routesGroup.MapGet("confirm-email", async (ISender sender, Guid userId ,string token, CancellationToken cancellationToken) =>
+        {
+            var response=await sender.Send(new ConfirmEmailCommand(userId,token), cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        })
+         .Produces<Result<string>>();
     }
 }

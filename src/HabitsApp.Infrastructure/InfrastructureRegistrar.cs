@@ -48,6 +48,7 @@ public static class InfrastructureRegistrar
 
         services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IJwtProvider,JwtProvider>();
+        services.AddScoped<IEmailService, EmailService>();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
     }
 }
