@@ -6,42 +6,56 @@ using System.Text;
 using System.Threading.Tasks;
 using HabitsApp.Domain.Abstractions;
 using HabitsApp.Domain.Abstractions.Repositories;
+using HabitsApp.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace HabitsApp.Infrastructure.Repositories;
 public class GenericRepository<T> : IGenericRepository<T> where T : Entity
 {
-    public void Add(T entity)
+    private readonly DbContext _dbContext;
+
+    public GenericRepository(DbContext context)
     {
-        throw new NotImplementedException();
+        _dbContext = context;
     }
 
-    public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    public void Add(T entity)
     {
-        throw new NotImplementedException();
+        _dbContext.Set<T>().Add(entity);
+    }
+
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbContext.Set<T>().AnyAsync(predicate);
     }
 
     public void Delete(T entity)
     {
-        throw new NotImplementedException();
+        _dbContext.Set<T>().Remove(entity);
     }
 
-    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Set<T>().FirstOrDefaultAsync(predicate);
     }
 
     public IQueryable<T> GetAll()
     {
-        throw new NotImplementedException();
+        return _dbContext.Set<T>().AsQueryable();
     }
 
-    public Task<List<T>> GetAllAsync()
+    public async Task<List<T>> GetAllAsync()
     {
-        throw new NotImplementedException();
+       return await _dbContext.Set<T>().ToListAsync();  
+    }
+
+    public async Task<T?> GetByIdAsync(Guid id)
+    {
+        return await _dbContext.Set<T>().FindAsync(id);
     }
 
     public void Update(T entity)
     {
-        throw new NotImplementedException();
+        _dbContext.Set<T>().Update(entity);
     }
 }
