@@ -9,11 +9,11 @@ using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace HabitsApp.Application.Habits;
-public sealed record GetUserHabitsQuery(Guid UserId):IRequest<Result<List<GetUserHabitsQueryResponse>>>;
+public sealed record GetUserHabitsQuery(Guid UserId) : IRequest<Result<List<GetUserHabitsQueryResponse>>>;
 
 public class GetUserHabitsQueryResponse
 {
-    public Guid Id { get; set; } 
+    public Guid Id { get; set; }
     public string Name { get; set; } = default!;
     public string Title { get; set; } = default!;
     public string? Description { get; set; }
@@ -40,15 +40,15 @@ internal sealed class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQ
                 Description = h.Description
             })
             .ToList();
-        if (habits==null || !habits.Any())
+        if (habits == null || !habits.Any())
         {
-            return Task.FromResult(Result<List<GetUserHabitsQueryResponse>>.Failure("No habits found for the user."));
+            return Task.FromResult(Result<List<GetUserHabitsQueryResponse>>.Success(null, "No habits found for the user."));
         }
         else
         {
-            return Task.FromResult(Result<List<GetUserHabitsQueryResponse>>.Success(habits, "Habits retrieved successfully."));
+            return Task.FromResult( Result<List<GetUserHabitsQueryResponse>>.Success(habits, "Habits retrieved successfully."));
         }
     }
 }
-    
+
 
