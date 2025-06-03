@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HabitsApp.Domain.Habits;
+using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 

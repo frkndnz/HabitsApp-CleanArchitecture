@@ -6,5 +6,6 @@ public static class RouteRegistrar
     {
         app.RegisterAuthRoutes();
         app.RegisterHabitRoutes();
+        app.RegisterHabitLogRoutes();
     }
 }

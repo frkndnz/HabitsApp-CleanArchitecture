@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HabitsApp.Domain.Abstractions;
 using HabitsApp.Domain.Abstractions.Repositories;
+using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Users;
 using Microsoft.AspNetCore.Http;

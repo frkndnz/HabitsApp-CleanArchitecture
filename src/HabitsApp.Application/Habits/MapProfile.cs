@@ -13,5 +13,7 @@ internal class MapProfile:Profile
     {
         CreateMap<HabitCreateCommand, Habit>();
         CreateMap<HabitUpdateCommand, Habit>();
+        CreateMap<Habit, GetUserHabitsQueryResponse>()
+            .ForMember(dest=>dest.IsCompletedToday,opt=>opt.Ignore());
     }
 }

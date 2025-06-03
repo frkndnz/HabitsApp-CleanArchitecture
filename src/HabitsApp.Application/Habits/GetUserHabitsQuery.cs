@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace HabitsApp.Application.Habits;
 public sealed record GetUserHabitsQuery(Guid UserId) : IRequest<Result<List<GetUserHabitsQueryResponse>>>;
@@ -15,38 +17,48 @@ public class GetUserHabitsQueryResponse
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
-    public string Title { get; set; } = default!;
     public string? Description { get; set; }
+    public string Color { get; set; } = default!;
+    public bool IsCompletedToday { get; set; }
 }
 
 internal sealed class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Result<List<GetUserHabitsQueryResponse>>>
 {
     private readonly IHabitRepository _habitRepository;
-
-    public GetUserHabitsQueryHandler(IHabitRepository habitRepository)
+    private readonly IHabitLogRepository _habitLogRepository;
+    public GetUserHabitsQueryHandler(IHabitRepository habitRepository, IHabitLogRepository habitLogRepository)
     {
         _habitRepository = habitRepository;
+        _habitLogRepository = habitLogRepository;
     }
 
-    public Task<Result<List<GetUserHabitsQueryResponse>>> Handle(GetUserHabitsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<GetUserHabitsQueryResponse>>> Handle(GetUserHabitsQuery request, CancellationToken cancellationToken)
     {
-        var habits = _habitRepository.GetAll()
-            .Where(h => h.CreateUserId == request.UserId)
-            .Select(h => new GetUserHabitsQueryResponse
-            {
-                Id = h.Id,
-                Name = h.Name,
-                Title = h.Title,
-                Description = h.Description
-            })
-            .ToList();
+        var response= from habit in _habitRepository.GetAll()
+                      where habit.CreateUserId == request.UserId
+                      join log in _habitLogRepository.GetAll()
+                       .Where(log => log.CreateUserId == request.UserId && log.Date.Date == DateTime.UtcNow.Date)
+                        on habit.Id equals log.HabitId into logGroup
+                      from log in logGroup.DefaultIfEmpty()
+                      select new GetUserHabitsQueryResponse
+                        {
+                            Id = habit.Id,
+                            Name = habit.Name,
+                            Color = habit.Color,
+                            Description = habit.Description,
+                            IsCompletedToday = log != null 
+                        };
+
+        var habits = await response.ToListAsync();
+
+        
         if (habits == null || !habits.Any())
         {
-            return Task.FromResult(Result<List<GetUserHabitsQueryResponse>>.Success(null, "No habits found for the user."));
+            return Result<List<GetUserHabitsQueryResponse>>.Success(null, "No habits found for the user.");
         }
         else
         {
-            return Task.FromResult( Result<List<GetUserHabitsQueryResponse>>.Success(habits, "Habits retrieved successfully."));
+            return  Result<List<GetUserHabitsQueryResponse>>.Success(habits, "Habits retrieved successfully.");
         }
     }
 }

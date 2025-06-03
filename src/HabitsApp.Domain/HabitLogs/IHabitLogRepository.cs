@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HabitsApp.Domain.Abstractions.Repositories;
 
-namespace HabitsApp.Domain.Habits;
-public interface IHabitLogRepository: IGenericRepository<HabitLog>
+namespace HabitsApp.Domain.HabitLogs;
+public interface IHabitLogRepository : IGenericRepository<HabitLog>
 {
 }

@@ -16,8 +16,8 @@ using Microsoft.AspNetCore.Identity;
 namespace HabitsApp.Application.Habits;
 public sealed record HabitCreateCommand(
     string Name,
-    string Title,
-    string? Description
+    string? Description,
+    string Color
 ) : IRequest<Result<string>>;
 
 public sealed class HabitCreateCommandValidator : AbstractValidator<HabitCreateCommand>
@@ -25,7 +25,7 @@ public sealed class HabitCreateCommandValidator : AbstractValidator<HabitCreateC
     public HabitCreateCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty().WithMessage("Habit name is required.");
-        RuleFor(x => x.Title).NotEmpty().WithMessage("Habit title is required.");
+        RuleFor(x => x.Color).NotEmpty().WithMessage("Habit color is required.");
         RuleFor(x => x.Description).MaximumLength(500).WithMessage("Description cannot exceed 500 characters.");
     }
 }
