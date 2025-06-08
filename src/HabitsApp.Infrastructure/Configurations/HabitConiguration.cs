@@ -17,5 +17,10 @@ internal class HabitConiguration : IEntityTypeConfiguration<Habit>
            .WithOne()
            .HasForeignKey(hl => hl.HabitId)
            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(h=>h.Category)
+            .WithMany(c=>c.Habits)
+            .HasForeignKey(h=>h.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -17,5 +17,12 @@ public static class StatsModule
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         }).Produces<Result<GetSummaryStatsQueryResponse>>();
+
+        routesGroup.MapGet("habit-details", async (ISender sender,CancellationToken cancellationToken) =>
+        {
+            var request = new GetHabitDetailsQuery();
+            var response = await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<GetHabitDetailsQueryResponse>>();
     }
 }

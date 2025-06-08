@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HabitsApp.Application.Services;
 using HabitsApp.Domain.Abstractions.Repositories;
+using HabitsApp.Domain.Categories;
 using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Users;
@@ -53,6 +54,7 @@ public static class InfrastructureRegistrar
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IHabitRepository, HabitRepository>();
         services.AddScoped<IHabitLogRepository, HabitLogRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ICurrentUserService,CurrentUserService>();
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
