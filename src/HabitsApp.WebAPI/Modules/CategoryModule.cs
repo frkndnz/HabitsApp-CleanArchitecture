@@ -16,5 +16,13 @@ public static class CategoryModule
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         }).Produces<Result<CreateCategoryCommandResponse>>();
+
+
+        routes.MapGet(string.Empty, async (ISender sender,CancellationToken cancellationToken) =>
+        {
+            GetCategoriesQuery query = new GetCategoriesQuery();
+            var response=await sender.Send(query, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<List<GetCategoriesQueryResponse>>>();
     }
 }

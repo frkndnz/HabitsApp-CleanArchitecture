@@ -11,7 +11,7 @@ using MediatR;
 namespace HabitsApp.Application.Categories;
 public sealed record CreateCategoryCommand(
     string Name,
-    string Emoji
+    string? Emoji
     ) : IRequest<Result<CreateCategoryCommandResponse>>;
 
 public class CreateCategoryCommandResponse

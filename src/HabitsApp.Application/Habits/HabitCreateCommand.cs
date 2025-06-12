@@ -17,7 +17,8 @@ namespace HabitsApp.Application.Habits;
 public sealed record HabitCreateCommand(
     string Name,
     string? Description,
-    string Color
+    string Color,
+    Guid? CategoryId
 ) : IRequest<Result<string>>;
 
 public sealed class HabitCreateCommandValidator : AbstractValidator<HabitCreateCommand>

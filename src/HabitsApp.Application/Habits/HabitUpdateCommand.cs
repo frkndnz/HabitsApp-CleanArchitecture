@@ -10,7 +10,12 @@ using HabitsApp.Domain.Shared;
 using MediatR;
 
 namespace HabitsApp.Application.Habits;
-public sealed record HabitUpdateCommand(string Name,string Description,string Color,bool isCompletedToday):IRequest<Result<GetUserHabitsQueryResponse>>
+public sealed record HabitUpdateCommand(
+    string Name,
+    string Description,
+    string Color,
+    Guid? CategoryId,
+    bool isCompletedToday):IRequest<Result<GetUserHabitsQueryResponse>>
 {
    public Guid? Id { get; set; }
 }
