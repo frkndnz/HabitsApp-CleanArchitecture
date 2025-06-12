@@ -9,5 +9,6 @@ public static class RouteRegistrar
         app.RegisterHabitLogRoutes();
         app.RegisterStatsRoutes();
         app.RegisterCategoriesRoutes();
+        app.RegisterUsersRoutes();
     }
 }
