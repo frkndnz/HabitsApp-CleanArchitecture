@@ -12,6 +12,8 @@ internal class MapProfile:Profile
     public  MapProfile()
     {
         CreateMap<UpdateUserCommand, AppUser>();
+        CreateMap<UpdateUserProfileCommand, AppUser>();
         CreateMap<AppUser,UpdateUserCommandResponse>();
+        CreateMap<AppUser,GetUserProfileQueryResponse>();
     }
 }

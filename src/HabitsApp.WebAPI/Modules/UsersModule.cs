@@ -19,6 +19,27 @@ public static class UsersModule
             .Produces<GetUsersAllQueryResponse>();
 
 
+        routesGroup.MapGet("profile",async (ISender sender,CancellationToken cancellationToken) =>
+        {
+            GetUserProfileQuery request = new GetUserProfileQuery();
+            var response = await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }) .Produces<GetUserProfileQueryResponse>();
+
+
+        routesGroup.MapPut("profile/{id}", async (ISender sender, string id, UpdateUserProfileCommand request, CancellationToken cancellationToken) =>
+        {
+            if (request.Id != Guid.Parse(id))
+            {
+                var result = Result<UpdateUserProfileCommand>.Failure("id not match!");
+                return Results.BadRequest(result);
+            }
+
+            var response = await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<string>>();
+
+
         routesGroup.MapPut("/{id}", async (ISender sender, string id, UpdateUserCommand request , CancellationToken cancellationToken) =>
         {
             if (request.Id != Guid.Parse(id))
