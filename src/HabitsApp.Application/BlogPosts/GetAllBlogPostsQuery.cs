@@ -19,7 +19,6 @@ public sealed record GetAllBlogPostsQueryResponse()
     public Guid Id { get; set; }
     public string Title { get; set; } = default!;
     public string ShortDescription { get; set; } = default!;
-    public string Content { get; set; } = default!;
 
     public string? ImageUrl { get; set; }
 }
@@ -36,7 +35,6 @@ internal sealed class GetAllBlogPostsQueryHandler(
             Id = b.Id,
             Title = b.Title,
             ShortDescription = b.ShortDescription,
-            Content = b.Content,
             ImageUrl =b.ImageUrl !=null ? urlService.GetAbsoluteUrl(b.ImageUrl!) : null,
         }).ToListAsync();
 

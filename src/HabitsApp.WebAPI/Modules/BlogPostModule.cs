@@ -21,7 +21,13 @@ public static class BlogPostModule
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         }).Produces<Result<List<GetAllBlogPostsQueryResponse>>>();
 
-
+        routes.MapGet("/{id}",async (ISender sender,string id,CancellationToken cancellationToken) =>
+        {
+            var blogId=Guid.Parse(id);
+            BlogPostGetByIdQuery request = new(blogId);
+            var response=await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<BlogPostGetByIdQueryResponse>>();
 
         routes.MapPost(string.Empty, async ([FromForm] BlogPostCreateCommand request, ISender sender, CancellationToken cancellationToken) =>
         {
