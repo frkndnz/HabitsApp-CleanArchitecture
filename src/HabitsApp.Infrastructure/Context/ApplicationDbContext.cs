@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HabitsApp.Domain.Abstractions;
 using HabitsApp.Domain.Abstractions.Repositories;
+using HabitsApp.Domain.Blogs;
 using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Users;
@@ -22,6 +23,7 @@ internal sealed class ApplicationDbContext : IdentityDbContext<AppUser, Identity
     }
     public DbSet<Habit> Habits { get; set; }
     public DbSet<HabitLog> HabitLogs { get; set; }
+    public DbSet<BlogPost> Blogs { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);

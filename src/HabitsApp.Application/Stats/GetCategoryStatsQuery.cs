@@ -12,10 +12,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace HabitsApp.Application.Stats;
-public sealed record GetCategoryStatsQuery() : IRequest<Result<List<GetCategoryStatsResponse>>>;
+public sealed record GetCategoryStatsQuery() : IRequest<Result<List<GetCategoryStatsQueryResponse>>>;
 
 
-public sealed record GetCategoryStatsResponse
+public sealed record GetCategoryStatsQueryResponse
 {
     public Guid CategoryId { get; set; }
     public string CategoryName { get; set; } = default!;
@@ -29,9 +29,9 @@ internal sealed class GetCategoryStatsQueryHandler(
     IHabitRepository habitRepository,
     IHabitLogRepository habitLogRepository,
     ICurrentUserService currentUserService
-    ) : IRequestHandler<GetCategoryStatsQuery, Result<List<GetCategoryStatsResponse>>>
+    ) : IRequestHandler<GetCategoryStatsQuery, Result<List<GetCategoryStatsQueryResponse>>>
 {
-    public async Task<Result<List<GetCategoryStatsResponse>>> Handle(GetCategoryStatsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<GetCategoryStatsQueryResponse>>> Handle(GetCategoryStatsQuery request, CancellationToken cancellationToken)
     {
         var today = DateTime.UtcNow.Date;
         var userId = currentUserService.UserId;
@@ -64,7 +64,7 @@ internal sealed class GetCategoryStatsQueryHandler(
         HabitCreatedDates = g.ToDictionary(h => h.HabitId, h => h.CreatedAt)
     }).ToList();
 
-        var results = new List<GetCategoryStatsResponse>();
+        var results = new List<GetCategoryStatsQueryResponse>();
 
         foreach (var categoryGroup in categoryHabits)
         {
@@ -72,7 +72,7 @@ internal sealed class GetCategoryStatsQueryHandler(
 
             decimal successRate = CalculateSuccessRate(categoryGroup.HabitIds, categoryGroup.HabitCreatedDates, categoryLogs);
 
-            results.Add(new GetCategoryStatsResponse
+            results.Add(new GetCategoryStatsQueryResponse
             {
                 CategoryId = categoryGroup.CategoryId,
                 CategoryName = categoryGroup.CategoryName,
@@ -81,7 +81,7 @@ internal sealed class GetCategoryStatsQueryHandler(
             });
         }
 
-        return await Task.FromResult( Result<List<GetCategoryStatsResponse>>.Success(results, "success"));
+        return await Task.FromResult( Result<List<GetCategoryStatsQueryResponse>>.Success(results, "success"));
     }
     private decimal CalculateSuccessRate(List<Guid> habitIds, Dictionary<Guid, DateTime> habitCreatedDays, List<HabitLog> logs)
     {

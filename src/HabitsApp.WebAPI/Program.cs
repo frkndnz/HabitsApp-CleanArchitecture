@@ -50,7 +50,7 @@ app.MapControllers().RequireAuthorization();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 await ExtensionsMiddleware.CreateFirstUser(app);
 app.UseExceptionHandler();
 app.Run();

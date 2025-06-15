@@ -24,5 +24,12 @@ public static class StatsModule
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         }).Produces<Result<GetHabitDetailsQueryResponse>>();
+
+        routesGroup.MapGet("category-stats", async (ISender sender,CancellationToken cancellationToken) =>
+        {
+            GetCategoryStatsQuery query = new GetCategoryStatsQuery();
+            var response=await sender.Send(query, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<List<GetCategoryStatsQueryResponse>>>();
     }
 }

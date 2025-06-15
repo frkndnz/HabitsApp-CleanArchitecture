@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using HabitsApp.Domain.Abstractions.Repositories;
+using HabitsApp.Domain.Categories;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Shared;
 using MediatR;
@@ -21,7 +22,13 @@ public sealed record HabitUpdateCommand(
 }
 
 
-internal sealed class HabitUpdateCommandHandler(IUnitOfWork unitOfWork,IMapper mapper, IHabitRepository habitRepository) : IRequestHandler<HabitUpdateCommand, Result<GetUserHabitsQueryResponse>>
+internal sealed class HabitUpdateCommandHandler
+    (
+    IUnitOfWork unitOfWork,
+    IMapper mapper,
+    IHabitRepository habitRepository,
+    ICategoryRepository categoryRepository
+    ) : IRequestHandler<HabitUpdateCommand, Result<GetUserHabitsQueryResponse>>
 {
     public async Task<Result<GetUserHabitsQueryResponse>> Handle(HabitUpdateCommand request, CancellationToken cancellationToken)
     {
@@ -38,7 +45,9 @@ internal sealed class HabitUpdateCommandHandler(IUnitOfWork unitOfWork,IMapper m
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var response = mapper.Map<GetUserHabitsQueryResponse>(habit);
+        var category = await categoryRepository.FirstOrDefaultAsync(c => c.Id == habit.CategoryId);
         response.IsCompletedToday = request.isCompletedToday;
+        response.CategoryName = category!.Name;
 
         return Result<GetUserHabitsQueryResponse>.Success(response, "Habit successfully updated!");
 
