@@ -21,7 +21,9 @@ builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer();
+})
+    .AddJwtBearer();
+  
 
 builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();

@@ -17,7 +17,7 @@ internal class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 
         builder.Property(u => u.FirstName).HasColumnType("nvarchar(50)");
         builder.Property(u => u.LastName).HasColumnType("nvarchar(50)");
-        builder.Property(u => u.UserName).HasColumnType("nvarchar(15)");
+        builder.Property(u => u.UserName).HasColumnType("nvarchar(50)");
         builder.Property(u => u.Email).HasColumnType("nvarchar(MAX)");
 
       

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using HabitsApp.Domain.Abstractions;
@@ -15,53 +16,65 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HabitsApp.Infrastructure.Context;
-internal sealed class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>,IUnitOfWork
+internal sealed class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>, IUnitOfWork
+{
+    public ApplicationDbContext(DbContextOptions opt) : base(opt)
     {
-    public ApplicationDbContext(DbContextOptions opt):base(opt)
-    {
-        
+
     }
     public DbSet<Habit> Habits { get; set; }
     public DbSet<HabitLog> HabitLogs { get; set; }
     public DbSet<BlogPost> Blogs { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        builder.Ignore<IdentityUserClaim<Guid>>();  
-        builder.Ignore<IdentityRoleClaim<Guid>>();
-        builder.Ignore<IdentityUserToken<Guid>>();
-        builder.Ignore<IdentityUserLogin<Guid>>();
-        builder.Ignore<IdentityUserRole<Guid>>();
+        // builder.Ignore<IdentityUserClaim<Guid>>();  
+        //  builder.Ignore<IdentityRoleClaim<Guid>>();
+        //  builder.Ignore<IdentityUserToken<Guid>>();
+        //  builder.Ignore<IdentityUserLogin<Guid>>();
+        //  builder.Ignore<IdentityUserRole<Guid>>();
 
-       
+
 
     }
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
-
         var entires = ChangeTracker.Entries<Entity>();
 
         HttpContextAccessor httpContextAccessor = new();
-        string userIdString = httpContextAccessor.HttpContext!.User.Claims.First(u => u.Type == "user_id").Value;
-        Guid userId = Guid.Parse(userIdString);
+        var httpContext = httpContextAccessor.HttpContext;
 
-        foreach (var entry in entires)
+        Guid? userId = null;
+
+        if (httpContext?.User?.Identity?.IsAuthenticated == true)
         {
-            switch (entry.State)
+            var claim = httpContext.User.Claims.FirstOrDefault(u => u.Type == "user_id");
+            if (claim != null)
             {
-                case EntityState.Added:
-                    entry.Property(p=>p.CreatedAt).CurrentValue = DateTime.UtcNow;
-                    entry.Property(p=>p.CreateUserId).CurrentValue = userId;
-                    break;
-                case EntityState.Modified:
-                    entry.Property(p => p.UpdatedAt).CurrentValue = DateTime.UtcNow;
-                    entry.Property(p => p.UpdateUserId).CurrentValue = userId;
-                    break;
-                case EntityState.Deleted:
-                    entry.Property(p => p.DeletedAt).CurrentValue = DateTime.UtcNow;
-                    entry.Property(p => p.DeleteUserId).CurrentValue = userId;
-                    break;
+                userId = Guid.Parse(claim.Value);
+            }
+        }
+        if (userId.HasValue)
+        {
+            foreach (var entry in entires)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Property(p => p.CreatedAt).CurrentValue = DateTime.UtcNow;
+                        entry.Property(p => p.CreateUserId).CurrentValue = userId.Value; // Explicitly cast Guid? to Guid  
+                        break;
+                    case EntityState.Modified:
+                        entry.Property(p => p.UpdatedAt).CurrentValue = DateTime.UtcNow;
+                        entry.Property(p => p.UpdateUserId).CurrentValue = userId.Value; // Explicitly cast Guid? to Guid  
+                        break;
+                    case EntityState.Deleted:
+                        entry.Property(p => p.DeletedAt).CurrentValue = DateTime.UtcNow;
+                        entry.Property(p => p.DeleteUserId).CurrentValue = userId.Value; // Explicitly cast Guid? to Guid  
+                        break;
+                }
             }
         }
 

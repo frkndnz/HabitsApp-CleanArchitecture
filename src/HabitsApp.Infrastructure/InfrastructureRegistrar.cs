@@ -49,6 +49,8 @@ public static class InfrastructureRegistrar
 
         services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
         services.ConfigureOptions<JwtOptionsSetup>();
+        
+
 
         services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IJwtProvider,JwtProvider>();
@@ -58,7 +60,7 @@ public static class InfrastructureRegistrar
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IBlogPostRepository,BlogPostRepository>();
         services.AddScoped<ICurrentUserService,CurrentUserService>();
-
+        services.AddScoped<IGoogleAuthValidator,GoogleAuthValidator>();
 
         services.AddScoped<IFileStorage,FileStorage>();
         services.AddScoped<IUrlService, UrlService>();

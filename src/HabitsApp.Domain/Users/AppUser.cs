@@ -11,6 +11,7 @@ public sealed class AppUser:IdentityUser<Guid>
     public AppUser()
     {
         Id = Guid.CreateVersion7(); // üretim sıralamasına göre GUID oluşturulur.
+        CreatedAt = DateTime.UtcNow;
     }
     public string FirstName { get; set; }=default!;
     public string LastName { get; set; }=default!;

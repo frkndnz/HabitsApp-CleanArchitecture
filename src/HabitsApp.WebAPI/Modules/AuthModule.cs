@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using HabitsApp.Application.Auth;
 using HabitsApp.Domain.Shared;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 namespace HabitsApp.WebAPI.Modules;
 
 public static class AuthModule
@@ -30,5 +32,13 @@ public static class AuthModule
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         })
          .Produces<Result<string>>();
+
+
+        routesGroup.MapPost("google", async (GoogleLoginCommand request,ISender sender,CancellationToken cancellationToken) =>
+        {
+            var response = await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response) ;
+           
+        }).Produces<Result<GoogleLoginCommandResponse>>();
     }
 }
