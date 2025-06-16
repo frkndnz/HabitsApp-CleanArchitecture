@@ -29,6 +29,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : Entity
         return await _dbContext.Set<T>().AnyAsync(predicate);
     }
 
+    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+    {
+        return predicate is null ?
+            await _dbContext.Set<T>().CountAsync()
+            : await _dbContext.Set<T>().CountAsync(predicate);
+    }
+
     public void Delete(T entity)
     {
         _dbContext.Set<T>().Remove(entity);

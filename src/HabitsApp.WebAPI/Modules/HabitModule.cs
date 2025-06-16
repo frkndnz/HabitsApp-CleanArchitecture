@@ -8,7 +8,7 @@ public static class HabitModule
 {
     public static void RegisterHabitRoutes(this IEndpointRouteBuilder routes)
     {
-        RouteGroupBuilder routesGroup = routes.MapGroup("/habits").WithTags("Habits");
+        RouteGroupBuilder routesGroup = routes.MapGroup("/habits").WithTags("Habits").RequireAuthorization();
 
         routesGroup.MapPost(string.Empty, async (ISender sender, HabitCreateCommand request, CancellationToken cancellationToken) =>
         {

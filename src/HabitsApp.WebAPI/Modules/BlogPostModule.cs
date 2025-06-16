@@ -14,9 +14,9 @@ public static class BlogPostModule
         RouteGroupBuilder routes = builder.MapGroup("/blogs").WithTags("Blogs");
 
 
-        routes.MapGet(string.Empty, async (ISender sender, CancellationToken cancellationToken) =>
+        routes.MapGet(string.Empty, async (string? searchTerm,int page, int pageSize,ISender sender, CancellationToken cancellationToken) =>
         {
-            GetAllBlogPostsQuery request = new GetAllBlogPostsQuery();
+            GetAllBlogPostsQuery request = new GetAllBlogPostsQuery(page,pageSize,searchTerm);
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         }).Produces<Result<List<GetAllBlogPostsQueryResponse>>>();

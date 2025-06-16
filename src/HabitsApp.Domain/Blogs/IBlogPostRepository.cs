@@ -8,4 +8,5 @@ using HabitsApp.Domain.Abstractions.Repositories;
 namespace HabitsApp.Domain.Blogs;
 public interface IBlogPostRepository:IGenericRepository<BlogPost>
 {
+    
 }
