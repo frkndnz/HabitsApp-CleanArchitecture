@@ -23,9 +23,13 @@ builder.Services.AddAuthentication(opt =>
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
     .AddJwtBearer();
-  
 
-builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("AdminPolicy", policy =>
+    policy.RequireRole("Admin"));
+});
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

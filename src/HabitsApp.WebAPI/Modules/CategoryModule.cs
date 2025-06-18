@@ -9,13 +9,14 @@ public static class CategoryModule
 {
     public static void RegisterCategoriesRoutes(this IEndpointRouteBuilder builder)
     {
-        RouteGroupBuilder routes = builder.MapGroup("categories").WithTags("Categories");
+        RouteGroupBuilder routes = builder.MapGroup("categories").WithTags("Categories").RequireAuthorization();
 
         routes.MapPost(string.Empty, async (ISender sender, CreateCategoryCommand request, CancellationToken cancellationToken) =>
         {
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
-        }).Produces<Result<CreateCategoryCommandResponse>>();
+        }).Produces<Result<CreateCategoryCommandResponse>>()
+        ;
 
 
         routes.MapGet(string.Empty, async (ISender sender,CancellationToken cancellationToken) =>

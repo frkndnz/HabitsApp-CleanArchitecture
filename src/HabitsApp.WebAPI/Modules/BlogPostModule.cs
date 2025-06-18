@@ -36,7 +36,8 @@ public static class BlogPostModule
         })
             .DisableAntiforgery()
             .Accepts<BlogPostCreateCommand>("multipart/form-data")
-            .Produces<Result<Guid>>();
+            .Produces<Result<Guid>>()
+            .RequireAuthorization("AdminPolicy");
 
         routes.MapPut("/{id}", async (ISender sender, string id, [FromForm] BlogPostUpdateCommand request, CancellationToken cancellationToken) =>
         {
@@ -45,13 +46,15 @@ public static class BlogPostModule
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         }).DisableAntiforgery()
             .Accepts<BlogPostUpdateCommand>("multipart/form-data")
-            .Produces<Result<Guid>>();
+            .Produces<Result<Guid>>()
+            .RequireAuthorization("AdminPolicy");
 
         routes.MapDelete("/{id}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             BlogPostDeleteCommand request = new BlogPostDeleteCommand(id);
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
-        }).Produces<Result<Guid>>();
+        }).Produces<Result<Guid>>()
+        .RequireAuthorization("AdminPolicy"); 
     }
 }

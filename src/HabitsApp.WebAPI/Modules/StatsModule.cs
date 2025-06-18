@@ -9,7 +9,7 @@ public static class StatsModule
 {
     public static void RegisterStatsRoutes(this IEndpointRouteBuilder builder)
     {
-        var routesGroup = builder.MapGroup("/stats").WithTags("Stats");
+        var routesGroup = builder.MapGroup("/stats").WithTags("Stats").RequireAuthorization();
 
         routesGroup.MapGet("summary", async (ISender sender, CancellationToken cancellationToken) =>
         {

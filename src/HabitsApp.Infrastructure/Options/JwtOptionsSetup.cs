@@ -20,5 +20,6 @@ public sealed class JwtOptionsSetup(IOptions<JwtOptions> jwtOptions) : IPostConf
         options.TokenValidationParameters.ValidIssuer = jwtOptions.Value.Issuer;
         options.TokenValidationParameters.ValidAudience = jwtOptions.Value.Audience;
         options.TokenValidationParameters.IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.SecurityKey));
+        options.TokenValidationParameters.RoleClaimType="user_role";
     }
 }

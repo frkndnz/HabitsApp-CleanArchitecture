@@ -16,7 +16,8 @@ public static class UsersModule
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         })
-            .Produces<GetUsersAllQueryResponse>();
+            .Produces<GetUsersAllQueryResponse>()
+            .RequireAuthorization("AdminPolicy");
 
 
         routesGroup.MapGet("profile",async (ISender sender,CancellationToken cancellationToken) =>
@@ -24,7 +25,8 @@ public static class UsersModule
             GetUserProfileQuery request = new GetUserProfileQuery();
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
-        }) .Produces<GetUserProfileQueryResponse>();
+        }) .Produces<GetUserProfileQueryResponse>()
+        .RequireAuthorization();
 
 
         routesGroup.MapPut("profile/{id}", async (ISender sender, string id, UpdateUserProfileCommand request, CancellationToken cancellationToken) =>
@@ -37,7 +39,8 @@ public static class UsersModule
 
             var response = await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
-        }).Produces<Result<string>>();
+        }).Produces<Result<string>>()
+        .RequireAuthorization();
 
 
         routesGroup.MapPut("/{id}", async (ISender sender, string id, UpdateUserCommand request , CancellationToken cancellationToken) =>
@@ -51,6 +54,7 @@ public static class UsersModule
             var response=await sender.Send(request, cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response); 
         })
-            .Produces<UpdateUserCommandResponse>();
+            .Produces<UpdateUserCommandResponse>()
+            .RequireAuthorization("AdminPolicy"); 
     }
 }

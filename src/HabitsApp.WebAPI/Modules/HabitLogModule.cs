@@ -9,7 +9,7 @@ public static class HabitLogModule
 {
     public static void RegisterHabitLogRoutes(this IEndpointRouteBuilder routes)
     {
-        RouteGroupBuilder routesGroup = routes.MapGroup("/habitlogs").WithTags("HabitLogs");
+        RouteGroupBuilder routesGroup = routes.MapGroup("/habitlogs").WithTags("HabitLogs").RequireAuthorization();
 
         routesGroup.MapPost(string.Empty, async (ISender sender, HabitLogCreateCommand request, CancellationToken cancellationToken) =>
         {
