@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HabitsApp.Application.Services;
 using HabitsApp.Domain.Abstractions.Repositories;
 using HabitsApp.Domain.Categories;
 using HabitsApp.Domain.Shared;
@@ -23,12 +24,13 @@ public class CreateCategoryCommandResponse
 
 internal sealed class CreateCategoryCommandHandler(
     ICategoryRepository categoryRepository,
-    IUnitOfWork unitOfWork
+    IUnitOfWork unitOfWork,
+    ICurrentUserService userService
     ) : IRequestHandler<CreateCategoryCommand, Result<CreateCategoryCommandResponse>>
 {
     public async Task<Result<CreateCategoryCommandResponse>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        bool exist=await categoryRepository.AnyAsync(c=>c.Name==request.Name);
+        bool exist=await categoryRepository.AnyAsync(c=>c.Name==request.Name && userService.UserId ==c.CreateUserId );
         if (exist )
             return Result<CreateCategoryCommandResponse>.Failure("zaten var");
 
