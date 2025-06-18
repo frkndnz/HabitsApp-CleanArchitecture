@@ -19,26 +19,50 @@ public static class AuthModule
         })
         .Produces<Result<string>>();
 
-        routesGroup.MapPost("login",async(ISender sender,LoginCommand request,CancellationToken cancellationToken) =>
+        routesGroup.MapPost("login", async (HttpContext http, ISender sender, LoginCommand request, CancellationToken cancellationToken) =>
         {
             var response = await sender.Send(request, cancellationToken);
-            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+           
+            if (response.IsSuccess)
+            {
+                http.Response.Cookies.Append("access_token", response.Value!.AccessToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddDays(1)
+                });
+            }
+            return response.IsSuccess ? Results.Ok(Result<AccountInfoDto>.Success(response.Value!.AccountInfo, "login success!")) : Results.BadRequest(response);
         })
+            .Produces<Result<AccountInfoDto>>()
         .Produces<Result<LoginCommandResponse>>();
 
-        routesGroup.MapGet("confirm-email", async (ISender sender, Guid userId ,string token, CancellationToken cancellationToken) =>
+
+        routesGroup.MapGet("info", async (ISender sender, CancellationToken cancellationToken) =>
         {
-            var response=await sender.Send(new ConfirmEmailCommand(userId,token), cancellationToken);
+            AccountMeQuery query = new AccountMeQuery();
+            var response = await sender.Send(query, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        })
+            .Produces<Result<AccountMeQueryResponse>>()
+            .RequireAuthorization();
+
+
+
+        routesGroup.MapGet("confirm-email", async (ISender sender, Guid userId, string token, CancellationToken cancellationToken) =>
+        {
+            var response = await sender.Send(new ConfirmEmailCommand(userId, token), cancellationToken);
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         })
          .Produces<Result<string>>();
 
 
-        routesGroup.MapPost("google", async (GoogleLoginCommand request,ISender sender,CancellationToken cancellationToken) =>
+        routesGroup.MapPost("google", async (GoogleLoginCommand request, ISender sender, CancellationToken cancellationToken) =>
         {
             var response = await sender.Send(request, cancellationToken);
-            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response) ;
-           
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+
         }).Produces<Result<GoogleLoginCommandResponse>>();
     }
 }

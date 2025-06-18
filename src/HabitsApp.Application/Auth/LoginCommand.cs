@@ -20,7 +20,13 @@ public sealed record LoginCommand
 
 public sealed record LoginCommandResponse
 {
-    public string AccessToken { get; set; }=default!;
+    public string AccessToken { get; set; } = default!;
+    public required AccountInfoDto AccountInfo { get; set; }
+}
+public sealed class AccountInfoDto
+{
+    public string UserName { get; set; } = string.Empty;
+    public string UserRole { get; set; } = string.Empty;
 }
 
 internal sealed class LoginCommandHandler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IJwtProvider jwtProvider) : IRequestHandler<LoginCommand, Result<LoginCommandResponse>>
@@ -61,7 +67,13 @@ internal sealed class LoginCommandHandler(UserManager<AppUser> userManager, Sign
 
         var response= new LoginCommandResponse
         {
-            AccessToken = accessToken
+            AccessToken = accessToken,
+            AccountInfo = new()
+            {
+                UserName=user.UserName!,
+                UserRole=userRole!
+
+            }
         };
         return Result<LoginCommandResponse>.Success(response, "Giriş başarılı!");
     }

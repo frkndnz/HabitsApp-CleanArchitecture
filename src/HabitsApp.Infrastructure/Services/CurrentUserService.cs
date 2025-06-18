@@ -19,4 +19,8 @@ public class CurrentUserService : ICurrentUserService
     public Guid UserId => Guid.TryParse(
         _httpContextAccessor.HttpContext?.User.FindFirst("user_id")!.Value,
         out var userId) ? userId : Guid.Empty;
+
+    public string UserName=>_httpContextAccessor.HttpContext?.User.FindFirst("user_name")!.Value ?? string.Empty;
+    public string UserRole => _httpContextAccessor.HttpContext?.User.FindFirst("user_role")!.Value ?? string.Empty;
+
 }

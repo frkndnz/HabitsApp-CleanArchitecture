@@ -43,15 +43,15 @@ app.UseHttpsRedirection();
 
 app.UseCors(opt =>
 {
-    opt.AllowAnyMethod();
-    opt.AllowAnyHeader();
-    opt.AllowCredentials();
-    opt.SetIsOriginAllowed(origin => true);
+    opt.WithOrigins("https://localhost:5173")
+       .AllowAnyMethod()
+       .AllowAnyHeader()
+       .AllowCredentials();
 });
 
 
 app.RegisterRoutes();
-app.MapGet("/", () => "Hello World!").RequireAuthorization();
+
 app.MapControllers().RequireAuthorization();
 
 app.UseAuthentication();

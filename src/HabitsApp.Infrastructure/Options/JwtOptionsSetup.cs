@@ -21,5 +21,18 @@ public sealed class JwtOptionsSetup(IOptions<JwtOptions> jwtOptions) : IPostConf
         options.TokenValidationParameters.ValidAudience = jwtOptions.Value.Audience;
         options.TokenValidationParameters.IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.SecurityKey));
         options.TokenValidationParameters.RoleClaimType="user_role";
+
+        options.Events = new JwtBearerEvents()
+        {
+            OnMessageReceived = context =>
+            {
+                context.Request.Cookies.TryGetValue("access_token", out var token);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
+        };
     }
 }
