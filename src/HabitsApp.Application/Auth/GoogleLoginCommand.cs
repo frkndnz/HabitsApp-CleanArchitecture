@@ -19,6 +19,7 @@ public sealed  record GoogleLoginCommand
 public class GoogleLoginCommandResponse
 {
     public string AccessToken { get; set; } = default!;
+    public required AccountInfoDto AccountInfo { get; set; }
 }
 
 internal sealed class GoogleLoginCommandHandler
@@ -76,6 +77,12 @@ internal sealed class GoogleLoginCommandHandler
         GoogleLoginCommandResponse response = new()
         {
             AccessToken = token,
+            AccountInfo = new()
+            {
+                UserName = user.UserName!,
+                UserRole = userRole!
+
+            }
         };
         return Result<GoogleLoginCommandResponse>.Success(response, "success");
 
