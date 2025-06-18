@@ -55,8 +55,9 @@ internal sealed class LoginCommandHandler(UserManager<AppUser> userManager, Sign
         {
             return Result<LoginCommandResponse>.Failure("Kullanıcı adı veya şifre hatalı!");
         }
-
-        var accessToken = await jwtProvider.CreateTokenAsync(user);
+        var userRoles=await userManager.GetRolesAsync(user);
+        var userRole=userRoles.FirstOrDefault();
+        var accessToken = await jwtProvider.CreateTokenAsync(user,userRole!);
 
         var response= new LoginCommandResponse
         {

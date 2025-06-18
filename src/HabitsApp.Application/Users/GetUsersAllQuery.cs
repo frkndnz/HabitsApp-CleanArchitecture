@@ -7,6 +7,7 @@ using HabitsApp.Domain.Abstractions;
 using HabitsApp.Domain.Shared;
 using HabitsApp.Domain.Users;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ public sealed record GetUsersAllQuery(
     int Page,
     int PageSize,
     string? SearchTerm
-    
+
     ) : IRequest<Result<GetUsersAllQueryResponse>>;
 
 
@@ -33,6 +34,7 @@ public sealed class UserDto : EntityDto
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string? Email { get; set; }
+    public string RoleName { get; set; } = default!;
 
 }
 
@@ -42,40 +44,58 @@ internal sealed class GetUsersQueryHandler(
 {
     public async Task<Result<GetUsersAllQueryResponse>> Handle(GetUsersAllQuery request, CancellationToken cancellationToken)
     {
-        var totalCount = userManager.Users.Count();
 
-        var pagedUsers = await (
+        var query =
             from user in userManager.Users
             join creator in userManager.Users
                 on user.CreateUserId equals creator.Id into createdByGroup
             from createdBy in createdByGroup.DefaultIfEmpty()
             where string.IsNullOrEmpty(request.SearchTerm)
-                ||  user.Email!.Contains(request.SearchTerm)
+                || user.Email!.Contains(request.SearchTerm)
                 || user.UserName!.Contains(request.SearchTerm)
-            select new UserDto
+            select new
             {
-                Id=user.Id,
-                UserName = user.UserName,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                CreatedAt = user.CreatedAt,
-                CreateUserName = createdBy.UserName,
-                UpdatedAt = user.UpdatedAt,
-                UpdateUserId = user.UpdateUserId,
-                DeletedAt = user.DeletedAt,
-                DeleteUserId = user.DeleteUserId,
-            })
+                User = user,
+                CreatedBy = createdBy,
+            };
+
+        var totalCount =await query.CountAsync(cancellationToken);
+
+        var pagedQuery = query
             .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .ToListAsync();
+            .Take(request.PageSize);
+
+        var pagedUsersData=await pagedQuery.ToListAsync(cancellationToken);
+        var userDtos=new List<UserDto>();
+
+        foreach (var item in pagedUsersData)
+        {
+            var userRoles = await userManager.GetRolesAsync(item.User);
+
+            userDtos.Add(new UserDto
+            {
+                Id = item.User.Id,
+                UserName = item.User.UserName,
+                FirstName = item.User.FirstName,
+                LastName = item.User.LastName,
+                Email = item.User.Email,
+                CreatedAt = item.User.CreatedAt,
+                CreateUserName = item.CreatedBy.UserName,
+                UpdatedAt = item.User.UpdatedAt,
+                UpdateUserId = item.User.UpdateUserId,
+                DeletedAt = item.User.DeletedAt,
+                DeleteUserId = item.User.DeleteUserId,
+                RoleName = userRoles.First()
+            });
+        }
+       
 
         GetUsersAllQueryResponse response = new()
         {
             Page = request.Page,
             PageSize = request.PageSize,
             TotalCount = totalCount,
-            Users = pagedUsers,
+            Users = userDtos,
         };
 
         return Result<GetUsersAllQueryResponse>.Success(response, "successfully taked users with pagination!");

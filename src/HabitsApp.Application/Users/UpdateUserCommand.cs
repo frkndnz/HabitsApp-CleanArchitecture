@@ -19,7 +19,8 @@ public sealed record UpdateUserCommand(
     string? UserName,
     string FirstName,
     string LastName,
-    string? Email
+    string? Email,
+    string RoleName
     ) : IRequest<Result<UpdateUserCommandResponse>>;
 
 
@@ -42,11 +43,13 @@ public sealed record UpdateUserCommandResponse
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string? Email { get; set; }
+    public string RoleName { get; set; } = default!;
 }
 
 
 internal sealed class UpdateUserCommandHandler(
     UserManager<AppUser> userManager,
+    RoleManager<IdentityRole<Guid>> roleManager,
     IMapper mapper
 
     ) : IRequestHandler<UpdateUserCommand, Result<UpdateUserCommandResponse>>
@@ -61,6 +64,17 @@ internal sealed class UpdateUserCommandHandler(
 
         mapper.Map(request, user);
 
+        if (!await roleManager.RoleExistsAsync(request.RoleName))
+        {
+            return Result<UpdateUserCommandResponse>.Failure("Seçilen rol sistemde tanımlı değil.");
+        }
+
+        if (!await userManager.IsInRoleAsync(user!, request.RoleName))
+        {
+            var currentRoles = await userManager.GetRolesAsync(user!);
+            await userManager.RemoveFromRolesAsync(user!, currentRoles); // tümünü sil
+            await userManager.AddToRoleAsync(user!, request.RoleName);
+        }
         var result= await userManager.UpdateAsync(user!);
 
         if (!result.Succeeded)

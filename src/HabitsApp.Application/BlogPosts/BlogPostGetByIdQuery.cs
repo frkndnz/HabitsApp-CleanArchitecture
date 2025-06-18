@@ -48,7 +48,7 @@ internal sealed class BlogPostGetByIdQueryHandler
             Title = blogPost.Title,
             ImageUrl = blogPost.ImageUrl != null ? urlService.GetAbsoluteUrl(blogPost.ImageUrl!) : null,
             CreatedAt = blogPost.CreatedAt,
-            CreatorName = user!.FullName
+            CreatorName =user?.FullName ?? string.Empty,
         };
 
         return Result<BlogPostGetByIdQueryResponse>.Success(response, "success!");

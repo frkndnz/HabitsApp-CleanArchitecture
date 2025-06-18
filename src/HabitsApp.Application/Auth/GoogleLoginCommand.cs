@@ -23,7 +23,7 @@ public class GoogleLoginCommandResponse
 
 internal sealed class GoogleLoginCommandHandler
     (
-        UserManager<AppUser> userManager, 
+        UserManager<AppUser> userManager,
         IJwtProvider jwtProvider,
         IGoogleAuthValidator googleAuthValidator
     ) : IRequestHandler<GoogleLoginCommand, Result<GoogleLoginCommandResponse>>
@@ -66,9 +66,13 @@ internal sealed class GoogleLoginCommandHandler
             if (!addLoginResult.Succeeded)
                 return Result<GoogleLoginCommandResponse>.Failure("Google hesabı kullanıcıya bağlanamadı.");
         }
+        await userManager.AddToRoleAsync(user, "User");
 
+        var userRoles= await userManager.GetRolesAsync(user);
+        string userRole =  userRoles.First();
 
-        var token = await jwtProvider.CreateTokenAsync(user);
+        var token = await jwtProvider.CreateTokenAsync(user,userRole);
+
         GoogleLoginCommandResponse response = new()
         {
             AccessToken = token,

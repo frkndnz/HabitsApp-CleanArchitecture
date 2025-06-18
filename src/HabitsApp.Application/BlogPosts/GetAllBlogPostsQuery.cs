@@ -48,7 +48,8 @@ internal sealed class GetAllBlogPostsQueryHandler(
 
         var pagedBlogPosts = await (from blogPost in blogPostRepository.GetAll()
                                     join creator in userManager.Users
-                                    on blogPost.CreateUserId equals creator.Id
+                                    on blogPost.CreateUserId equals creator.Id into createdByGroup
+                                    from createdBy in createdByGroup.DefaultIfEmpty()
                                     where string.IsNullOrEmpty(request.SearchTerm)
                         || blogPost.Title!.Contains(request.SearchTerm)
                         || blogPost.ShortDescription!.Contains(request.SearchTerm)
@@ -58,7 +59,7 @@ internal sealed class GetAllBlogPostsQueryHandler(
                                         Title = blogPost.Title,
                                         ShortDescription = blogPost.ShortDescription,
                                         ImageUrl = blogPost.ImageUrl != null ? urlService.GetAbsoluteUrl(blogPost.ImageUrl) : null,
-                                        CreatorName = creator.FullName,
+                                        CreatorName = createdBy !=null ? createdBy.FullName : "bilinmiyor",
                                         CreatedAt = blogPost.CreatedAt,
                                     })
                  .Skip((request.Page - 1) * request.PageSize)

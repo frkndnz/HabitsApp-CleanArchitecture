@@ -57,6 +57,7 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
             var errors = result.Errors.Select(e => e.Description).ToArray();
             return Result<string>.Failure(errors);
         }
+        await userManager.AddToRoleAsync(newUser, "User");
 
         var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser); // confirm token
         var encodedToken=HttpUtility.UrlEncode(token); // token url encode

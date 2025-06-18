@@ -14,12 +14,14 @@ using Microsoft.IdentityModel.Tokens;
 namespace HabitsApp.Infrastructure.Services;
 internal class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
 {
-    public Task<string> CreateTokenAsync(AppUser user, CancellationToken cancellationToken = default)
+    public Task<string> CreateTokenAsync(AppUser user,string userRole, CancellationToken cancellationToken = default)
     {
         List<Claim> claims = new()
         {
             new Claim("user_id",user.Id.ToString()),
             new Claim("user_name",user.UserName!.ToString()),
+            new Claim("user_role",userRole),
+            
         };
 
         var expires = DateTime.Now.AddDays(1);
