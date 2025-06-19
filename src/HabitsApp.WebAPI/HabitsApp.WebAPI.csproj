@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	  <UserSecretsId>59d197c7-f286-4e4e-bd2b-b70d34f591a2</UserSecretsId>
+	  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	  <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.1.1" />
   </ItemGroup>
 

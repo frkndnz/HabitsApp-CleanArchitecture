@@ -1,25 +1,37 @@
-﻿{
-  "$schema": "https://json.schemastore.org/launchsettings.json",
+{
   "profiles": {
     "http": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-        "applicationUrl": "http://localhost:5113",
       "launchUrl": "scalar/v1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5113"
     },
     "https": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-        "applicationUrl": "https://localhost:7201;http://localhost:5113",
       "launchUrl": "scalar/v1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7201;http://localhost:5113"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/scalar/v1",
+        "environmentVariables": {
+            "ASPNETCORE_HTTPS_PORTS": "8081",
+            "ASPNETCORE_HTTP_PORTS": "8080",
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+      "publishAllPorts": true,
+      "useSSL": true
     }
-  }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
 }

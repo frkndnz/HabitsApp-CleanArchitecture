@@ -10,6 +10,7 @@ public static class ExtensionsMiddleware
             Console.WriteLine("test");
         using (var scoped = app.Services.CreateScope())
         {
+            
             var userManager = scoped.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var roleManager=scoped.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             var configuration=scoped.ServiceProvider.GetRequiredService<IConfiguration>();

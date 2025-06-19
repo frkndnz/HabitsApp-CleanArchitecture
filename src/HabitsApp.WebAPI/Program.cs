@@ -1,11 +1,17 @@
+using Google;
 using HabitsApp.Application;
 using HabitsApp.Infrastructure;
+using HabitsApp.Infrastructure.Context;
 using HabitsApp.WebAPI;
 using HabitsApp.WebAPI.Modules;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
 
 builder.AddServiceDefaults();
 
@@ -33,6 +39,14 @@ builder.Services.AddAuthorization(opt =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using(var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
+
 
 app.MapDefaultEndpoints();
 
