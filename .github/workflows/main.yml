@@ -29,3 +29,16 @@ jobs:
           file: ./src/HabitsApp.WebAPI/Dockerfile
           push: true
           tags: frkndnz/habits-backend:latest
+      - name: Update Azure Container App
+        uses: azure/cli@v1 # Azure CLI komutlarını çalıştırmak için bir GitHub Action kullanır
+        with:
+          inlineScript: |
+            # Bu satırlar Azure'a kimlik doğrulaması yapmak içindir, eğer daha önce yapmadıysanız
+            az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            
+            # Container App'inizi yeni imajı kullanacak şekilde güncelleme komutu
+            az containerapp update \
+              --name habits-backend \ # Kendi Container App adınızı buraya yazın
+              --resource-group MyApp \ # Kendi Kaynak Grubunuzu buraya yazın
+              --image frkndnz/habits-backend:latest # Burası önemlidir: latest tag'ini tekrar belirtiyoruz
