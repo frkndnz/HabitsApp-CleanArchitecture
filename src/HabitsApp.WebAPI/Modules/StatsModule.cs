@@ -7,7 +7,7 @@ namespace HabitsApp.WebAPI.Modules;
 
 public static class StatsModule
 {
-    public static void RegisterStatsRoutes(this IEndpointRouteBuilder builder)
+    public static void RegisterStatsRoutes(this RouteGroupBuilder builder)
     {
         var routesGroup = builder.MapGroup("/stats").WithTags("Stats").RequireAuthorization();
 

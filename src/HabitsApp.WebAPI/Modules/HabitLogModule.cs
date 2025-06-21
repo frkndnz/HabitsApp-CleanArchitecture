@@ -7,7 +7,7 @@ namespace HabitsApp.WebAPI.Modules;
 
 public static class HabitLogModule
 {
-    public static void RegisterHabitLogRoutes(this IEndpointRouteBuilder routes)
+    public static void RegisterHabitLogRoutes(this RouteGroupBuilder routes)
     {
         RouteGroupBuilder routesGroup = routes.MapGroup("/habitlogs").WithTags("HabitLogs").RequireAuthorization();
 

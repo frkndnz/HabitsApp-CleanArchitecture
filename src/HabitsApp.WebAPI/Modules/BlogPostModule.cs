@@ -9,7 +9,7 @@ namespace HabitsApp.WebAPI.Modules;
 
 public static class BlogPostModule
 {
-    public static void RegisterBlogsRoutes(this IEndpointRouteBuilder builder)
+    public static void RegisterBlogsRoutes(this RouteGroupBuilder builder)
     {
         RouteGroupBuilder routes = builder.MapGroup("/blogs").WithTags("Blogs");
 
