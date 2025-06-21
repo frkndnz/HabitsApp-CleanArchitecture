@@ -25,7 +25,7 @@ jobs:
       - name: Build and push to DockerHub
         uses: docker/build-push-action@v5
         with:
-          context: ./src
+        #  context: ./src
           file: ./src/HabitsApp.WebAPI/Dockerfile
           push: true
           tags: frkndnz/habits-backend:latest
