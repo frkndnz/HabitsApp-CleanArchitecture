@@ -39,6 +39,6 @@ jobs:
             
             # Container App'inizi yeni imajı kullanacak şekilde güncelleme komutu
             az containerapp update \
-              --name habits-backend \ # Kendi Container App adınızı buraya yazın
-              --resource-group MyApp \ # Kendi Kaynak Grubunuzu buraya yazın
-              --image frkndnz/habits-backend:latest # Burası önemlidir: latest tag'ini tekrar belirtiyoruz
+              --name habits-backend \ 
+              --resource-group MyApp \
+              --image frkndnz/habits-backend:latest 
