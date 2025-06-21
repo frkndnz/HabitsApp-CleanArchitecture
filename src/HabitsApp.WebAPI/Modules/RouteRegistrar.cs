@@ -4,12 +4,13 @@ public static class RouteRegistrar
 {
     public static void RegisterRoutes(this IEndpointRouteBuilder app)
     {
-        app.RegisterAuthRoutes();
-        app.RegisterHabitRoutes();
-        app.RegisterHabitLogRoutes();
-        app.RegisterStatsRoutes();
-        app.RegisterCategoriesRoutes();
-        app.RegisterUsersRoutes();
-        app.RegisterBlogsRoutes();
+        var apiGroup = app.MapGroup("/api");
+        apiGroup.RegisterAuthRoutes();
+        apiGroup.RegisterHabitRoutes();
+        apiGroup.RegisterHabitLogRoutes();
+        apiGroup.RegisterStatsRoutes();
+        apiGroup.RegisterCategoriesRoutes();
+        apiGroup.RegisterUsersRoutes();
+        apiGroup.RegisterBlogsRoutes();
     }
 }

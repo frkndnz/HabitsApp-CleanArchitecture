@@ -7,10 +7,10 @@ namespace HabitsApp.WebAPI.Modules;
 
 public static class AuthModule
 {
-    public static void RegisterAuthRoutes(this IEndpointRouteBuilder routes)
+    public static void RegisterAuthRoutes(this RouteGroupBuilder routes)
     {
         RouteGroupBuilder routesGroup = routes.MapGroup("/auth").WithTags("Auth");
-
+        
 
         routesGroup.MapPost("register", async (ISender sender, RegisterCommand request, CancellationToken cancellationToken) =>
         {

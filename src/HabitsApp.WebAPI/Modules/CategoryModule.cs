@@ -7,7 +7,7 @@ namespace HabitsApp.WebAPI.Modules;
 
 public static class CategoryModule
 {
-    public static void RegisterCategoriesRoutes(this IEndpointRouteBuilder builder)
+    public static void RegisterCategoriesRoutes(this RouteGroupBuilder builder)
     {
         RouteGroupBuilder routes = builder.MapGroup("categories").WithTags("Categories").RequireAuthorization();
 
