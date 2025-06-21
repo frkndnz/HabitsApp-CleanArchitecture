@@ -57,7 +57,8 @@ app.UseHttpsRedirection();
 
 app.UseCors(opt =>
 {
-    opt.WithOrigins("https://localhost:5173")
+
+    opt.WithOrigins(app.Configuration["Cors:Origin"]!)
        .AllowAnyMethod()
        .AllowAnyHeader()
        .AllowCredentials();
