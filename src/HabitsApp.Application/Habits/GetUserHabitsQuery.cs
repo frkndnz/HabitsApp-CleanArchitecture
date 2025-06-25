@@ -23,6 +23,7 @@ public class GetUserHabitsQueryResponse
     public bool IsCompletedToday { get; set; }
     public Guid? CategoryId { get; set; }
     public string? CategoryName { get; set; }
+    public List<bool>? WeeklyLogStatus { get; set; }
 }
 
 internal sealed class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQuery, Result<List<GetUserHabitsQueryResponse>>>
@@ -30,7 +31,7 @@ internal sealed class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQ
     private readonly IHabitRepository _habitRepository;
     private readonly IHabitLogRepository _habitLogRepository;
     private readonly ICategoryRepository _categoryRepository;
-    public GetUserHabitsQueryHandler(IHabitRepository habitRepository,ICategoryRepository categoryRepository, IHabitLogRepository habitLogRepository)
+    public GetUserHabitsQueryHandler(IHabitRepository habitRepository, ICategoryRepository categoryRepository, IHabitLogRepository habitLogRepository)
     {
         _habitRepository = habitRepository;
         _habitLogRepository = habitLogRepository;
@@ -40,38 +41,59 @@ internal sealed class GetUserHabitsQueryHandler : IRequestHandler<GetUserHabitsQ
 
     public async Task<Result<List<GetUserHabitsQueryResponse>>> Handle(GetUserHabitsQuery request, CancellationToken cancellationToken)
     {
+        var today = DateTime.UtcNow.Date;
+        var diff = (int)today.DayOfWeek - (int)DayOfWeek.Monday;
+        diff = diff < 0 ? 6 : diff;
+        var weekStart = today.AddDays(-diff);
+        var weekEnd = weekStart.AddDays(7);
+
+
         var response = from habit in _habitRepository.GetAll()
                        where habit.CreateUserId == request.UserId
                        join category in _categoryRepository.GetAll()
                          on habit.CategoryId equals category.Id into categoryGroup
                        from category in categoryGroup.DefaultIfEmpty()
+                       select new
+                       {
+                           Habit = habit,
+                           Category = category,
+                           Logs = _habitLogRepository.GetAll().
+                           Where(log => log.HabitId == habit.Id &&
+                           log.CreateUserId == request.UserId &&
+                           log.Date >= weekStart &&
+                           log.Date <= weekEnd).ToList()
+                       };
 
-                      join log in _habitLogRepository.GetAll()
-                       .Where(log => log.CreateUserId == request.UserId && log.Date.Date == DateTime.UtcNow.Date)
-                        on habit.Id equals log.HabitId into logGroup
-                      from log in logGroup.DefaultIfEmpty()
-                      select new GetUserHabitsQueryResponse
-                        {
-                            Id = habit.Id,
-                            Name = habit.Name,
-                            Color = habit.Color,
-                            Description = habit.Description,
-                            IsCompletedToday = log != null,
-                            CategoryId=habit.CategoryId,
-                            CategoryName=category !=null ? category.Name : null,
-                            
-                        };
+                       
 
-        var habits = await response.ToListAsync();
+        var habitWithLogs = await response.ToListAsync();
 
-        
+        var habits = habitWithLogs.Select(item => new GetUserHabitsQueryResponse
+        {
+            Id = item.Habit.Id,
+            Name = item.Habit.Name,
+            Color = item.Habit.Color,
+            Description = item.Habit.Description,
+            IsCompletedToday = item.Logs.Any(log => log.Date.Date == DateTime.UtcNow.Date),
+            CategoryId = item.Habit.CategoryId,
+            CategoryName = item.Category != null ? item.Category.Name : null,
+            WeeklyLogStatus = Enumerable.Range(0, 7)
+                                .Select(dayOffSet =>
+                                {
+                                    var dateToCheck = weekStart.AddDays(dayOffSet).Date;
+                                    return item.Logs.Any(log => log.Date.Date == dateToCheck);
+                                })
+                                .ToList()
+        }).ToList();
+
+
         if (habits == null || !habits.Any())
         {
             return Result<List<GetUserHabitsQueryResponse>>.Success(null, "No habits found for the user.");
         }
         else
         {
-            return  Result<List<GetUserHabitsQueryResponse>>.Success(habits, "Habits retrieved successfully.");
+            return Result<List<GetUserHabitsQueryResponse>>.Success(habits, "Habits retrieved successfully.");
         }
     }
 }

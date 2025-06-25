@@ -29,6 +29,15 @@ public static class HabitModule
         }).Produces<Result<List<GetUserHabitsQueryResponse>>>();
 
 
+        routesGroup.MapGet("/{id}", async (ISender sender, string id, CancellationToken cancellationToken) =>
+        {
+            var habitId = Guid.Parse(id);
+            var query = new GetHabitByIdQuery(habitId);
+            var response = await sender.Send(query, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        })
+            .Produces<Result<GetHabitByIdQueryResponse>>();
+
         routesGroup.MapPut("/{id}", async (ISender sender,string id,HabitUpdateCommand request,CancellationToken cancellationToken) =>
         {
             request.Id = Guid.Parse(id);

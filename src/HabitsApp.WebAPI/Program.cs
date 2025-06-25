@@ -5,6 +5,7 @@ using HabitsApp.Infrastructure.Context;
 using HabitsApp.WebAPI;
 using HabitsApp.WebAPI.Modules;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -30,7 +31,10 @@ builder.Services.AddAuthentication(opt =>
 })
     .AddJwtBearer();
 
-
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+{
+    opt.TokenLifespan = TimeSpan.FromDays(1);
+});
 builder.Services.AddAuthorization(opt =>
 {
     opt.AddPolicy("AdminPolicy", policy =>

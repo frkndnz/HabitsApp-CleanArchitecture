@@ -80,7 +80,7 @@ internal sealed class GetUsersQueryHandler(
                 LastName = item.User.LastName,
                 Email = item.User.Email,
                 CreatedAt = item.User.CreatedAt,
-                CreateUserName = item.CreatedBy.UserName,
+                CreateUserName = item.CreatedBy?.UserName,
                 UpdatedAt = item.User.UpdatedAt,
                 UpdateUserId = item.User.UpdateUserId,
                 DeletedAt = item.User.DeletedAt,

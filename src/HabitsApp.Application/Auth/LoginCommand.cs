@@ -53,8 +53,13 @@ internal sealed class LoginCommandHandler(UserManager<AppUser> userManager, Sign
                 return Result<LoginCommandResponse>.Failure("Kullanıcı kilitli! Lütfen daha sonra tekrar deneyiniz.");
             }
         }
+        
         if(signInResult.IsNotAllowed)
         {
+            if (!user.EmailConfirmed)
+            {
+                return Result<LoginCommandResponse>.Failure("E-posta adresiniz henüz doğrulanmadı. Lütfen e-postanıza gelen bağlantıya tıklayarak hesabınızı doğrulayın.");
+            }
             return Result<LoginCommandResponse>.Failure("Kullanıcı giriş yapmaya izin verilmiyor! Lütfen yöneticinizle iletişime geçiniz.");
         }
         if (!signInResult.Succeeded)

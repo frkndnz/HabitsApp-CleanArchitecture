@@ -45,6 +45,7 @@ internal sealed class HabitUpdateCommandHandler
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var response = mapper.Map<GetUserHabitsQueryResponse>(habit);
+
         var category = await categoryRepository.FirstOrDefaultAsync(c => c.Id == habit.CategoryId);
         response.IsCompletedToday = request.isCompletedToday;
         response.CategoryName = category!.Name;
