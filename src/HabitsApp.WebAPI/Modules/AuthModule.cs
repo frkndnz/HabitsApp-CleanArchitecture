@@ -41,7 +41,14 @@ public static class AuthModule
 
         routesGroup.MapPost("logout",  (HttpContext context) =>
         {
-            context.Response.Cookies.Delete("access_token");
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddDays(-1)
+            };
+            context.Response.Cookies.Delete("access_token",cookieOptions);
             var response = Result<string>.Success(null, "logout success!");
             return Results.Ok(response);
         }).Produces<Result<string>>()
@@ -65,6 +72,25 @@ public static class AuthModule
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         })
          .Produces<Result<string>>();
+
+
+        routesGroup.MapPost("forgot-password", async (ISender sender, ForgotPasswordCommand request, CancellationToken cancellationToken) =>
+        {
+            var response = await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<string>>();
+
+        routesGroup.MapPost("reset-password", async (ISender sender, ResetPasswordCommand request, CancellationToken cancellationToken) =>
+        {
+            var response = await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<string>>();
+
+        routesGroup.MapPost("resend-confirmation", async (ISender sender, ResendConfirmationCommand request, CancellationToken cancellationToken) =>
+        {
+            var response = await sender.Send(request, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }).Produces<Result<string>>();
 
 
         routesGroup.MapPost("google", async (HttpContext http, GoogleLoginCommand request, ISender sender, CancellationToken cancellationToken) =>

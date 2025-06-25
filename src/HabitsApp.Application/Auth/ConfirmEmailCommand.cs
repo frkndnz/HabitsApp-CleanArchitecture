@@ -14,29 +14,32 @@ public sealed record ConfirmEmailCommand
 (
     Guid UserId,
     string Token
-    ):IRequest<Result<string>>;
+    ) : IRequest<Result<string>>;
 
 
 internal sealed class ConfirmEmailCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<ConfirmEmailCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        var user=await userManager.FindByIdAsync(request.UserId.ToString());
+        var user = await userManager.FindByIdAsync(request.UserId.ToString());
         if (user is null)
         {
-            return Result<string>.Failure("Kullanıcı bulunamadı!");
+            return Result<string>.Failure("Not found user!");
         }
 
-        
+
         var result = await userManager.ConfirmEmailAsync(user, request.Token);
 
 
         if (!result.Succeeded)
         {
-            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            return Result<string>.Failure($"Eposta adresiniz onaylanamadı: {errors}");
-           
+            if (result.Errors.Any(e => e.Description.Contains("Invalid token")))
+            {
+                return Result<string>.Failure("InvalidToken");
+            }
+            return Result<string>.Failure("Email confirmation failed!");
+
         }
-        return Result<string>.Success(null,"Eposta adresiniz başarıyla onaylandı!");
+        return Result<string>.Success(null, "Email confirmed");
     }
 }
