@@ -15,7 +15,7 @@ internal class EmailService : IEmailService
     {
         
         var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse("sahagurusu@gmail.com"));
+        email.From.Add(MailboxAddress.Parse("habitfluxapp@gmail.com"));
         email.To.Add(MailboxAddress.Parse(to));
         email.Subject = subject;
         email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -26,7 +26,7 @@ internal class EmailService : IEmailService
 
         using var smtp = new SmtpClient();
         await smtp.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-        await smtp.AuthenticateAsync("sahagurusu@gmail.com", _configuration["Gmail:Password"]);
+        await smtp.AuthenticateAsync("habitfluxapp@gmail.com", _configuration["Gmail:Password"]);
         await smtp.SendAsync(email);
         await smtp.DisconnectAsync(true);
     }
