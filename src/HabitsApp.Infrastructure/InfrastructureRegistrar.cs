@@ -7,6 +7,7 @@ using HabitsApp.Application.Services;
 using HabitsApp.Domain.Abstractions.Repositories;
 using HabitsApp.Domain.Blogs;
 using HabitsApp.Domain.Categories;
+using HabitsApp.Domain.Feedbacks;
 using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Users;
@@ -59,8 +60,13 @@ public static class InfrastructureRegistrar
         services.AddScoped<IHabitLogRepository, HabitLogRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IBlogPostRepository,BlogPostRepository>();
+        services.AddScoped<IFeedbackRepository,FeedbackRepository>();
+
+
         services.AddScoped<ICurrentUserService,CurrentUserService>();
         services.AddScoped<IGoogleAuthValidator,GoogleAuthValidator>();
+
+        services.AddScoped<IGeminiService, GeminiService>();
 
         services.AddScoped<IFileStorage,FileStorage>();
         services.AddScoped<IUrlService, UrlService>();

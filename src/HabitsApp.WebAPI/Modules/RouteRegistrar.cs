@@ -5,6 +5,7 @@ public static class RouteRegistrar
     public static void RegisterRoutes(this IEndpointRouteBuilder app)
     {
         var apiGroup = app.MapGroup("/api");
+
         apiGroup.RegisterAuthRoutes();
         apiGroup.RegisterHabitRoutes();
         apiGroup.RegisterHabitLogRoutes();
@@ -12,5 +13,9 @@ public static class RouteRegistrar
         apiGroup.RegisterCategoriesRoutes();
         apiGroup.RegisterUsersRoutes();
         apiGroup.RegisterBlogsRoutes();
+        apiGroup.RegisterFeedbackRoutes();
+        apiGroup.AdminRegisterRoutes();
+
+        apiGroup.RegisterAiRoutes();
     }
 }
