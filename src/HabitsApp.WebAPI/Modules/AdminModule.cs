@@ -1,4 +1,6 @@
 ﻿using HabitsApp.Application.AdminDashboard;
+using HabitsApp.Application.Logs.Dtos;
+using HabitsApp.Application.SeriLogs;
 using HabitsApp.Domain.Shared;
 using MediatR;
 
@@ -19,6 +21,18 @@ public static class AdminModule
             return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
         })
             .Produces<Result<AdminDashboardQueryResponse>>();
+
+        routes.MapGet("logs/summary",async(ISender sender,CancellationToken cancellationToken) =>
+        {
+            var response = await sender.Send(new GetLogSummaryStatsQuery(), cancellationToken);
+            return response.IsSuccess ? Results.Ok(response) : Results.BadRequest(response);
+        }) .Produces<Result<LogSummaryStatsDto>>();
+
+        routes.MapGet("logs", async ([AsParameters]GetLogsQuery query,ISender sender,CancellationToken cancellationToken) =>
+        {
+            var response=await sender.Send(query, cancellationToken);
+            return response.IsSuccess ? Results.Ok(response): Results.BadRequest(response);
+        }).Produces<Result<GetLogsQueryResponse>>();
     }
             
         

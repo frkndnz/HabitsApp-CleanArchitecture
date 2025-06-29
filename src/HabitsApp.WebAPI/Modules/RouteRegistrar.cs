@@ -17,5 +17,12 @@ public static class RouteRegistrar
         apiGroup.AdminRegisterRoutes();
 
         apiGroup.RegisterAiRoutes();
+
+
+        RouteGroupBuilder testroutes = apiGroup.MapGroup("test").WithTags("test");
+        testroutes.MapGet(string.Empty, () =>
+        {
+            throw new Exception("test amaçlı hata!");
+        });
     }
 }

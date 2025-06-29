@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HabitsApp.Application.Logs;
 using HabitsApp.Application.Services;
 using HabitsApp.Domain.Abstractions.Repositories;
 using HabitsApp.Domain.Blogs;
@@ -12,6 +13,7 @@ using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Users;
 using HabitsApp.Infrastructure.Context;
+using HabitsApp.Infrastructure.Logging;
 using HabitsApp.Infrastructure.Options;
 using HabitsApp.Infrastructure.Repositories;
 using HabitsApp.Infrastructure.Services;
@@ -47,11 +49,12 @@ public static class InfrastructureRegistrar
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
+        SerilogSetup.ConfigureSerilog(configuration);
 
         services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
         services.ConfigureOptions<JwtOptionsSetup>();
         
-
+       
 
         services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IJwtProvider,JwtProvider>();
@@ -61,7 +64,7 @@ public static class InfrastructureRegistrar
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IBlogPostRepository,BlogPostRepository>();
         services.AddScoped<IFeedbackRepository,FeedbackRepository>();
-
+        services.AddScoped<ILogRepository, LogRepository>();    
 
         services.AddScoped<ICurrentUserService,CurrentUserService>();
         services.AddScoped<IGoogleAuthValidator,GoogleAuthValidator>();
