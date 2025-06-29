@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HabitsApp.Domain.Abstractions;
 using HabitsApp.Domain.Abstractions.Repositories;
 using HabitsApp.Domain.Blogs;
+using HabitsApp.Domain.Feedbacks;
 using HabitsApp.Domain.HabitLogs;
 using HabitsApp.Domain.Habits;
 using HabitsApp.Domain.Users;
@@ -25,16 +26,13 @@ public sealed class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRo
     public DbSet<Habit> Habits { get; set; }
     public DbSet<HabitLog> HabitLogs { get; set; }
     public DbSet<BlogPost> Blogs { get; set; }
+    public DbSet<Feedback> Feedbacks { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-        // builder.Ignore<IdentityUserClaim<Guid>>();  
-        //  builder.Ignore<IdentityRoleClaim<Guid>>();
-        //  builder.Ignore<IdentityUserToken<Guid>>();
-        //  builder.Ignore<IdentityUserLogin<Guid>>();
-        //  builder.Ignore<IdentityUserRole<Guid>>();
+      
 
 
 

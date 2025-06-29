@@ -16,6 +16,8 @@
 # Mono auto generated files
 mono_crash.*
 
+# Ignore blog images (test amaçlı statik dosyalar)
+src/HabitsApp.WebAPI/wwwroot/blog-images/
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
