@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace HabitsApp.Infrastructure.Services;
-public class BlobStorageService : IBlobStorageService
+public class BlobStorageService : IFileStorage
 {
     private readonly BlobContainerClient _containerClient;
 
@@ -22,34 +22,40 @@ public class BlobStorageService : IBlobStorageService
         _containerClient.CreateIfNotExists();
     }
 
-    public async Task DeleteFileAsync(string blobUrl, CancellationToken cancellationToken)
+    public async Task DeleteFileAsync(string blobUrl, string? folder)
     {
-        if (string.IsNullOrEmpty(blobUrl))
+        if (string.IsNullOrWhiteSpace(blobUrl))
             return;
 
-        // Blob URL'sinden blob adı/path çıkarılıyor
-        var uri = new Uri(blobUrl);
-        var blobName = uri.Segments.Skip(2).Aggregate((a, b) => a + b);
-        // Segments[0] = "/", [1] = "container/", sonrası blob path
+        // URL'den blob adını çıkar
+        string blobName = GetBlobNameFromUrl(blobUrl);
 
         var blobClient = _containerClient.GetBlobClient(blobName);
-
         await blobClient.DeleteIfExistsAsync();
     }
 
-    public async Task<string> UploadFileAsync(IFormFile file, CancellationToken cancellationToken)
+    public async Task<string> UploadFileAsync(IFormFile file, string? folder, CancellationToken cancellationToken)
     {
         var safeFileName = $"{Guid.NewGuid()}_{SanitizeFileName(file.FileName)}";
-        var blobClient = _containerClient.GetBlobClient(safeFileName);
+        var blobName = string.IsNullOrEmpty(folder) ? safeFileName : $"{folder}/{safeFileName}";
+
+        var blobClient = _containerClient.GetBlobClient(blobName);
 
         using var stream = file.OpenReadStream();
         await blobClient.UploadAsync(stream, overwrite: true, cancellationToken);
 
-        return blobClient.Uri.ToString(); // Bu URL frontend tarafında kullanılabilir
+        return blobClient.Uri.ToString();
     }
     private string SanitizeFileName(string fileName)
     {
         var invalidChars = Path.GetInvalidFileNameChars();
         return string.Concat(fileName.Where(ch => !invalidChars.Contains(ch))).Replace(" ", "_");
+    }
+    private static string GetBlobNameFromUrl(string blobUrl)
+    {
+        var uri = new Uri(blobUrl);
+        var segments = uri.AbsolutePath.TrimStart('/').Split('/');
+        // segments[0] container adı, gerisi blob adı
+        return string.Join('/', segments.Skip(1));
     }
 }
