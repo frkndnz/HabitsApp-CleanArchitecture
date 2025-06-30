@@ -81,7 +81,7 @@ public static class InfrastructureRegistrar
         {
             services.AddScoped<IFileStorage,BlobStorageService>();
         }
-        services.AddScoped<IFileStorage,FileStorage>();
+        
         services.AddScoped<IUrlService, UrlService>();
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
