@@ -31,7 +31,17 @@ public class BlobStorageService : IFileStorage
         string blobName = GetBlobNameFromUrl(blobUrl);
 
         var blobClient = _containerClient.GetBlobClient(blobName);
-        await blobClient.DeleteIfExistsAsync();
+        Console.WriteLine($"Blob URI: {blobClient.Uri}");
+        try
+        {
+            var response = await blobClient.DeleteIfExistsAsync();
+            Console.WriteLine($"Delete success: {response.Value}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting blob: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<string> UploadFileAsync(IFormFile file, string? folder, CancellationToken cancellationToken)
@@ -54,8 +64,10 @@ public class BlobStorageService : IFileStorage
     private static string GetBlobNameFromUrl(string blobUrl)
     {
         var uri = new Uri(blobUrl);
-        var segments = uri.AbsolutePath.TrimStart('/').Split('/');
-        // segments[0] container adı, gerisi blob adı
-        return string.Join('/', segments.Skip(1));
+        var decodedPath = Uri.UnescapeDataString(uri.AbsolutePath);
+        var segments = decodedPath.TrimStart('/').Split('/');
+        var blobName = string.Join('/', segments.Skip(1));
+        Console.WriteLine($"Extracted blob name from URL '{blobUrl}': '{blobName}'");
+        return blobName;
     }
 }
