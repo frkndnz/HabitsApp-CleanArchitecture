@@ -73,6 +73,7 @@ public static class InfrastructureRegistrar
 
         services.AddScoped<IGeminiService, GeminiService>();
 
+        Console.WriteLine($"Environment: {environment.EnvironmentName}");
         if (environment.IsDevelopment())
         {
             services.AddScoped<IFileStorage, FileStorage>();
