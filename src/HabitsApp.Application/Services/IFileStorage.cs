@@ -8,6 +8,6 @@ using Microsoft.AspNetCore.Http;
 namespace HabitsApp.Application.Services;
 public interface IFileStorage
 {
-    Task<string> UploadFileAsync(IFormFile file,string folder,CancellationToken cancellationToken);
-    Task DeleteFileAsync(string fileUrl, string folder);
+    Task<string> UploadFileAsync(IFormFile file,string? folder,CancellationToken cancellationToken);
+    Task DeleteFileAsync(string fileUrl, string? folder);
 }

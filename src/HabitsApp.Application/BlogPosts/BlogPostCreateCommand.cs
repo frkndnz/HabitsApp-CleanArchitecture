@@ -22,7 +22,7 @@ public sealed class BlogPostCreateCommand:IRequest<Result<Guid>>
 internal sealed class BlogPostCreateCommandHandler(
     IBlogPostRepository blogRepository,
     IUnitOfWork unitOfWork,
-    IBlobStorageService blobStorageService
+    IFileStorage fileStorage
     ) : IRequestHandler<BlogPostCreateCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(BlogPostCreateCommand request, CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ internal sealed class BlogPostCreateCommandHandler(
         string? imageUrl = null;
         if(request.Image is { Length: > 0 })
         {
-            imageUrl = await blobStorageService.UploadFileAsync(request.Image, cancellationToken);
+            imageUrl = await fileStorage.UploadFileAsync(request.Image,"blog-images", cancellationToken);
         }
         var blogPost=new BlogPost(request.Title,request.ShortDescription,request.Content,imageUrl);
 

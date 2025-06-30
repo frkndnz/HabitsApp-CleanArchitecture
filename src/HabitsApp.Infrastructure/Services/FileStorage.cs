@@ -17,13 +17,13 @@ internal class FileStorage : IFileStorage
         _webHostEnvironment = webHostEnvironment;
     }
 
-    public async Task DeleteFileAsync(string fileUrl, string folder)
+    public async Task DeleteFileAsync(string fileUrl, string? folder)
     {
         if (string.IsNullOrEmpty(fileUrl))
             return;
 
         var fileName = Path.GetFileName(fileUrl);
-        var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, folder);
+        var folderPath = Path.Combine(_webHostEnvironment.WebRootPath ?? "wwwroot", folder ?? "");
 
         var fullPath = Path.Combine(folderPath, fileName);
 
@@ -33,9 +33,9 @@ internal class FileStorage : IFileStorage
         }
     }
 
-    public async Task<string> UploadFileAsync(IFormFile file, string folder, CancellationToken cancellationToken)
+    public async Task<string> UploadFileAsync(IFormFile file, string? folder, CancellationToken cancellationToken)
     {
-        var uploadRootFolder=Path.Combine(_webHostEnvironment.WebRootPath?? "wwwroot",folder);
+        var uploadRootFolder=Path.Combine(_webHostEnvironment.WebRootPath ?? "wwwroot", folder ?? "");
 
         Directory.CreateDirectory(uploadRootFolder);
 
@@ -45,6 +45,6 @@ internal class FileStorage : IFileStorage
         using var stream = new FileStream(filePath, FileMode.Create);
         await file.CopyToAsync(stream,cancellationToken);
 
-        return Path.Combine("/", folder, uniqueFileName).Replace("\\", "/");
+        return Path.Combine("/", folder ?? "", uniqueFileName).Replace("\\", "/");
     }
 }

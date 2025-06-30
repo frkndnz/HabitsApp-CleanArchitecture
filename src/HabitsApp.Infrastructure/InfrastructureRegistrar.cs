@@ -17,15 +17,17 @@ using HabitsApp.Infrastructure.Logging;
 using HabitsApp.Infrastructure.Options;
 using HabitsApp.Infrastructure.Repositories;
 using HabitsApp.Infrastructure.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace HabitsApp.Infrastructure;
 public static class InfrastructureRegistrar
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration,IWebHostEnvironment environment)
     {
         string connectionString = configuration.GetConnectionString("SqlServer")!;
         services.AddDbContext<ApplicationDbContext>(opt =>
@@ -70,7 +72,15 @@ public static class InfrastructureRegistrar
         services.AddScoped<IGoogleAuthValidator,GoogleAuthValidator>();
 
         services.AddScoped<IGeminiService, GeminiService>();
-        services.AddScoped<IBlobStorageService, BlobStorageService>();
+
+        if (environment.IsDevelopment())
+        {
+            services.AddScoped<IFileStorage, FileStorage>();
+        }
+        else
+        {
+            services.AddScoped<IFileStorage,BlobStorageService>();
+        }
         services.AddScoped<IFileStorage,FileStorage>();
         services.AddScoped<IUrlService, UrlService>();
 

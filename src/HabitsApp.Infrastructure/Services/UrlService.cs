@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,8 +21,15 @@ public class UrlService : IUrlService
     public string GetAbsoluteUrl(string relativePath)
     {
 
+        if (string.IsNullOrWhiteSpace(relativePath))
+            return relativePath;
+
+        // Eğer zaten tam URL ise (örn. blob URL), direkt döndür
+        if (Uri.IsWellFormedUriString(relativePath, UriKind.Absolute))
+            return relativePath;
+
         var request = _httpContextAccessor.HttpContext?.Request;
-        if(request==null)
+        if (request == null)
             return relativePath;
 
         var baseUrl = $"{request.Scheme}://{request.Host}";
