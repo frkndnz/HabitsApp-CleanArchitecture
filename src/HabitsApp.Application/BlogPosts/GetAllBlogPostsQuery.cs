@@ -38,8 +38,7 @@ public sealed class BlogPostDto()
 
 internal sealed class GetAllBlogPostsQueryHandler(
     IBlogPostRepository blogPostRepository,
-     UserManager<AppUser> userManager,
-    IUrlService urlService
+     UserManager<AppUser> userManager
     ) : IRequestHandler<GetAllBlogPostsQuery, Result<GetAllBlogPostsQueryResponse>>
 {
     public async Task<Result<GetAllBlogPostsQueryResponse>> Handle(GetAllBlogPostsQuery request, CancellationToken cancellationToken)
@@ -58,7 +57,7 @@ internal sealed class GetAllBlogPostsQueryHandler(
                                         Id = blogPost.Id,
                                         Title = blogPost.Title,
                                         ShortDescription = blogPost.ShortDescription,
-                                        ImageUrl = blogPost.ImageUrl != null ? urlService.GetAbsoluteUrl(blogPost.ImageUrl) : null,
+                                        ImageUrl = blogPost.ImageUrl ,
                                         CreatorName = createdBy !=null ? createdBy.FullName : "bilinmiyor",
                                         CreatedAt = blogPost.CreatedAt,
                                     })

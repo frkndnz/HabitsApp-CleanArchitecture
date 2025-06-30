@@ -70,7 +70,7 @@ public static class InfrastructureRegistrar
         services.AddScoped<IGoogleAuthValidator,GoogleAuthValidator>();
 
         services.AddScoped<IGeminiService, GeminiService>();
-
+        services.AddScoped<IBlobStorageService, BlobStorageService>();
         services.AddScoped<IFileStorage,FileStorage>();
         services.AddScoped<IUrlService, UrlService>();
 

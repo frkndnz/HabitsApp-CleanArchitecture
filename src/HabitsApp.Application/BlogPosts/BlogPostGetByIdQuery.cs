@@ -27,7 +27,6 @@ public sealed record BlogPostGetByIdQueryResponse
 
 internal sealed class BlogPostGetByIdQueryHandler
     (IBlogPostRepository blogPostRepository,
-    IUrlService urlService,
     UserManager<AppUser> userManager
     ) : IRequestHandler<BlogPostGetByIdQuery, Result<BlogPostGetByIdQueryResponse>>
 {
@@ -46,7 +45,7 @@ internal sealed class BlogPostGetByIdQueryHandler
             Content = blogPost.Content,
             ShortDescription = blogPost.ShortDescription,
             Title = blogPost.Title,
-            ImageUrl = blogPost.ImageUrl != null ? urlService.GetAbsoluteUrl(blogPost.ImageUrl!) : null,
+            ImageUrl = blogPost.ImageUrl,
             CreatedAt = blogPost.CreatedAt,
             CreatorName =user?.FullName ?? string.Empty,
         };

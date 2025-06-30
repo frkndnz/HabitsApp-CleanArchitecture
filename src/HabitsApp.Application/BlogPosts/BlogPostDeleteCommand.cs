@@ -18,7 +18,7 @@ public sealed record BlogPostDeleteCommand(
 internal sealed class BlogPostDeleteCommandHandler(
     IBlogPostRepository blogPostRepository,
     IUnitOfWork unitOfWork,
-    IFileStorage fileStorage
+   IBlobStorageService blobStorageService
     
     ) : IRequestHandler<BlogPostDeleteCommand, Result<Guid>>
 {
@@ -30,11 +30,14 @@ internal sealed class BlogPostDeleteCommandHandler(
 
         var blogPost=await blogPostRepository.FirstOrDefaultAsync(b=>b.Id==request.Id);
 
-        await fileStorage.DeleteFileAsync(blogPost!.ImageUrl!, "blog-images");
+        if (!string.IsNullOrEmpty(blogPost?.ImageUrl))
+        {
+            await blobStorageService.DeleteFileAsync(blogPost.ImageUrl, cancellationToken);
+        }
 
         blogPostRepository.Delete(blogPost!);
 
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
 
         return Result<Guid>.Success(request.Id, "delete operation is success!");
